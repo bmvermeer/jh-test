@@ -68,14 +68,6 @@ node {
         """
     }
 
-    // Authorize the Snyk CLI
-    withCredentials([string(credentialsId: 'SNYK_TOKEN', variable: 'SNYK_TOKEN_VAR')]) {
-        stage('Authorize Snyk CLI') {
-            sh './snyk auth ${SNYK_TOKEN_VAR}'
-        }
-    }
-
-
     // Run snyk test to check for vulnerabilities and fail the build if any are found
     // Consider using --severity-threshold=<low|medium|high> for more granularity (see snyk help for more info).
     stage('Snyk Test using Snyk CLI') {
