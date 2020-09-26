@@ -71,7 +71,7 @@ node {
     // Run snyk test to check for vulnerabilities and fail the build if any are found
     // Consider using --severity-threshold=<low|medium|high> for more granularity (see snyk help for more info).
     stage('Snyk Test using Snyk CLI') {
-        sh './snyk test'
+        sh './snyk test --all-projects'
     }
 
 
