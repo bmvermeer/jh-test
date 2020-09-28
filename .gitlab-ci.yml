@@ -75,7 +75,9 @@ dependency_scanning:
     #    - npm install -g npm@latest
     #    - npm install -g snyk
     - curl -Lo ./snyk $(curl -s https://api.github.com/repos/snyk/snyk/releases/latest | grep "browser_download_url.*snyk-win.exe\"" | cut -d ':' -f 2,3 | tr -d \" | tr -d ' ')
+    - chmod +x snyk
     # Run snyk help, snyk auth, snyk monitor, snyk test to break build and out report
+
     - ./snyk test --all-projects
     - ./snyk monitor --all-projects
 # Uncomment the following line to use gitlabs container registry. You need to adapt the REGISTRY_URL in case you are not using gitlab.com
