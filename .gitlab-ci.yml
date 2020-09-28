@@ -69,7 +69,6 @@ maven-package:
     expire_in: 1 day
 
 dependency_scanning:
-  image: node:latest
   stage: release
   script:
     # Install npm, snyk, and snyk-to-html
