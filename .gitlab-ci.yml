@@ -74,7 +74,7 @@ dependency_scanning:
     # Install npm, snyk, and snyk-to-html
     #    - npm install -g npm@latest
     #    - npm install -g snyk
-    - curl -s https://api.github.com/repos/snyk/snyk/releases/latest | grep "browser_download_url.*snyk-linux\"" | cut -d: -f 2,3 | tr -d \" | wget -qi -
+    - curl -s https://api.github.com/repos/snyk/snyk/releases/latest | grep "browser_download_url.*snyk-linux\"" | cut -d ':' -f 2,3 | tr -d \" | wget -qi -
     # Run snyk help, snyk auth, snyk monitor, snyk test to break build and out report
     - ./snyk-linux test --all-projects
     - ./snyk-linux monitor --all-projects
