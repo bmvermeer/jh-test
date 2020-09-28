@@ -70,8 +70,6 @@ before_script:
 
 dependency_scanning:
   stage: release
-  variables:
-    - $DOWNLOAD = curl -Lo ./snyk "${snyk_cli_dl_linux}"
   script:
     # Install npm, snyk, and snyk-to-html
     #    - npm install -g npm@latest
