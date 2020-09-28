@@ -18,20 +18,20 @@ before_script:
   - ./mvnw -ntp com.github.eirslett:frontend-maven-plugin:install-node-and-npm -DnodeVersion=v12.16.1 -DnpmVersion=6.14.5 -Dmaven.repo.local=$MAVEN_USER_HOME
   - ./mvnw -ntp com.github.eirslett:frontend-maven-plugin:npm -Dmaven.repo.local=$MAVEN_USER_HOME
 
-nohttp:
-  stage: check
-  script:
-    - ./mvnw -ntp checkstyle:check -Dmaven.repo.local=$MAVEN_USER_HOME
-
-maven-compile:
-  stage: build
-  script:
-    - ./mvnw -ntp compile -P-webpack -Dmaven.repo.local=$MAVEN_USER_HOME
-  artifacts:
-    paths:
-      - target/classes/
-      - target/generated-sources/
-    expire_in: 1 day
+#nohttp:
+#  stage: check
+#  script:
+#    - ./mvnw -ntp checkstyle:check -Dmaven.repo.local=$MAVEN_USER_HOME
+#
+#maven-compile:
+#  stage: build
+#  script:
+#    - ./mvnw -ntp compile -P-webpack -Dmaven.repo.local=$MAVEN_USER_HOME
+#  artifacts:
+#    paths:
+#      - target/classes/
+#      - target/generated-sources/
+#    expire_in: 1 day
 
 #maven-test:
 #
@@ -58,25 +58,25 @@ maven-compile:
 #            - target/jacoco
 #        expire_in: 1 day
 
-maven-package:
-  stage: package
-  script:
-    - ./mvnw -ntp verify -Pprod -DskipTests -Dmaven.repo.local=$MAVEN_USER_HOME
-  artifacts:
-    paths:
-      - target/*.jar
-      - target/classes
-    expire_in: 1 day
+#maven-package:
+#  stage: package
+#  script:
+#    - ./mvnw -ntp verify -Pprod -DskipTests -Dmaven.repo.local=$MAVEN_USER_HOME
+#  artifacts:
+#    paths:
+#      - target/*.jar
+#      - target/classes
+#    expire_in: 1 day
 
 dependency_scanning:
   stage: release
   script:
     # Install npm, snyk, and snyk-to-html
-    - npm install -g npm@latest
+    #    - npm install -g npm@latest
     - npm install -g snyk
     # Run snyk help, snyk auth, snyk monitor, snyk test to break build and out report
-    - snyk test --all-projects
-    - snyk monitor --all-projects
+    - ./snyk test --all-projects
+    - ./snyk monitor --all-projects
 # Uncomment the following line to use gitlabs container registry. You need to adapt the REGISTRY_URL in case you are not using gitlab.com
 #docker-push:
 #    stage: release
