@@ -74,5 +74,11 @@ node {
         sh './snyk test --all-projects'
     }
 
+    // Run snyk monitor to create a snapshot and let it monitor by Snyk
+    // Consider using --severity-threshold=<low|medium|high> for more granularity (see snyk help for more info).
+    stage('Snyk Monitor using Snyk CLI') {
+        sh './snyk monitor --all-projects'
+    }
+
 
 }
