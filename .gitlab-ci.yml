@@ -1,4 +1,4 @@
-image: java:latest
+image: adoptopenjdk/openjdk11:latest
 
 cache:
   key: '$CI_COMMIT_REF_NAME'
