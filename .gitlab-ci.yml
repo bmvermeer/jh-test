@@ -70,14 +70,16 @@ before_script:
 
 dependency_scanning:
   stage: release
+  variables:
+    - $DOWNLOAD = curl -Lo ./snyk "${snyk_cli_dl_linux}"
   script:
     # Install npm, snyk, and snyk-to-html
     #    - npm install -g npm@latest
     #    - npm install -g snyk
-    - curl -s https://api.github.com/repos/snyk/snyk/releases/latest | grep "browser_download_url.*snyk-linux\"" | cut -d ':' -f 2,3 | tr -d \" | wget -qi -
+    - curl -Lo ./snyk $(curl -s https://api.github.com/repos/snyk/snyk/releases/latest | grep "browser_download_url.*snyk-win.exe\"" | cut -d ':' -f 2,3 | tr -d \" | tr -d ' ')
     # Run snyk help, snyk auth, snyk monitor, snyk test to break build and out report
-    - ./snyk-linux test --all-projects
-    - ./snyk-linux monitor --all-projects
+    - ./snyk test --all-projects
+    - ./snyk monitor --all-projects
 # Uncomment the following line to use gitlabs container registry. You need to adapt the REGISTRY_URL in case you are not using gitlab.com
 #docker-push:
 #    stage: release
