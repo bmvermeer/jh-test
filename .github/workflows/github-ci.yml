@@ -34,7 +34,7 @@ jobs:
                 curl -Lo ./snyk $(curl -s https://api.github.com/repos/snyk/snyk/releases/latest | grep "browser_download_url.*snyk-linux\"" | cut -d ':' -f 2,3 | tr -d \" | tr -d ' ')
                 chmod +x snyk
             - name: Snyk Test
-                run: ./snyk test --all-projects
+              run: ./snyk test --all-projects
             - name: Snyk Monitor
-                run: ./snyk test --all-projects
+              run: ./snyk test --all-projects
 
