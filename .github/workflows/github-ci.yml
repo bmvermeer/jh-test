@@ -29,12 +29,11 @@ jobs:
               run: npm run test
             - name: Package application
               run: ./mvnw -ntp package -Pprod -DskipTests
-            - name: Download Snyk CLI
-              run: |
-                curl -Lo ./snyk $(curl -s https://api.github.com/repos/snyk/snyk/releases/latest | grep "browser_download_url.*snyk-linux\"" | cut -d ':' -f 2,3 | tr -d \" | tr -d ' ')
-                chmod +x snyk
-            - name: Snyk Test
-              run: ./snyk test --all-projects
-            - name: Snyk Monitor
-              run: ./snyk test --all-projects
+            - name: Run Snyk to check for vulnerabilities
+              uses: snyk/actions/maven@master
+              env:
+                SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+              with:
+                 args: --all-projects
+
 
