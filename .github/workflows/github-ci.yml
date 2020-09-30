@@ -11,6 +11,7 @@ jobs:
             SPRING_OUTPUT_ANSI_ENABLED: DETECT
             JHI_DISABLE_WEBPACK_LOGS: true
             NG_CLI_ANALYTICS: false
+            SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         steps:
             - uses: actions/checkout@v2
             - uses: actions/setup-node@v1
@@ -32,10 +33,6 @@ jobs:
             - name: Install Snyk
               run: npm install -g snyk
             - name: Snyk Test
-              run: snyk test
-              env:
-                SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-              with:
-                 args: --all-projects
+              run: snyk test --all-projects
 
 
