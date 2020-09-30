@@ -29,8 +29,10 @@ jobs:
               run: npm run test
             - name: Package application
               run: ./mvnw -ntp package -Pprod -DskipTests
-            - name: Run Snyk to check for vulnerabilities
-              uses: snyk/actions/maven@master
+            - name: Install Snyk
+              run: npm install -g snyk
+            - name: Snyk Test
+              run: snyk test
               env:
                 SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
               with:
