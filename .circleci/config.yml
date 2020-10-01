@@ -65,7 +65,7 @@ jobs:
             - run:
                 name: Verify with Prod Profile
                 command: './mvnw -ntp verify -Pprod -DskipTests'
-          # Dependency scanning with Snyk
+          # Dependency scanning with Snyk.
           # add Snyk API token as environment variable SNYK_TOKEN
             - run:
                 name: install-snyk
