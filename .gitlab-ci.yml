@@ -18,66 +18,65 @@ before_script:
   - ./mvnw -ntp com.github.eirslett:frontend-maven-plugin:install-node-and-npm -DnodeVersion=v12.16.1 -DnpmVersion=6.14.5 -Dmaven.repo.local=$MAVEN_USER_HOME
   - ./mvnw -ntp com.github.eirslett:frontend-maven-plugin:npm -Dmaven.repo.local=$MAVEN_USER_HOME
 
-#nohttp:
-#  stage: check
-#  script:
-#    - ./mvnw -ntp checkstyle:check -Dmaven.repo.local=$MAVEN_USER_HOME
-#
-#maven-compile:
-#  stage: build
-#  script:
-#    - ./mvnw -ntp compile -P-webpack -Dmaven.repo.local=$MAVEN_USER_HOME
-#  artifacts:
-#    paths:
-#      - target/classes/
-#      - target/generated-sources/
-#    expire_in: 1 day
+nohttp:
+  stage: check
+  script:
+    - ./mvnw -ntp checkstyle:check -Dmaven.repo.local=$MAVEN_USER_HOME
 
-#maven-test:
-#
-#    stage: test
-#    script:
-#        - ./mvnw -ntp verify -P-webpack -Dmaven.repo.local=$MAVEN_USER_HOME
-#    artifacts:
-#        reports:
-#            junit: target/test-results/**/TEST-*.xml
-#        paths:
-#            - target/test-results
-#            - target/jacoco
-#        expire_in: 1 day
-#
-#frontend-test:
-#    stage: test
-#    script:
-#        - ./mvnw -ntp com.github.eirslett:frontend-maven-plugin:npm -Dfrontend.npm.arguments='run test' -Dmaven.repo.local=$MAVEN_USER_HOME
-#    artifacts:
-#        reports:
-#            junit: target/test-results/TESTS-results-jest.xml
-#        paths:
-#            - target/test-results
-#            - target/jacoco
-#        expire_in: 1 day
+maven-compile:
+  stage: build
+  script:
+    - ./mvnw -ntp compile -P-webpack -Dmaven.repo.local=$MAVEN_USER_HOME
+  artifacts:
+    paths:
+      - target/classes/
+      - target/generated-sources/
+    expire_in: 1 day
 
-#maven-package:
-#  stage: package
-#  script:
-#    - ./mvnw -ntp verify -Pprod -DskipTests -Dmaven.repo.local=$MAVEN_USER_HOME
-#  artifacts:
-#    paths:
-#      - target/*.jar
-#      - target/classes
-#    expire_in: 1 day
+maven-test:
+  stage: test
+  script:
+    - ./mvnw -ntp verify -P-webpack -Dmaven.repo.local=$MAVEN_USER_HOME
+  artifacts:
+    reports:
+      junit: target/test-results/**/TEST-*.xml
+    paths:
+      - target/test-results
+      - target/jacoco
+    expire_in: 1 day
 
+frontend-test:
+  stage: test
+  script:
+    - ./mvnw -ntp com.github.eirslett:frontend-maven-plugin:npm -Dfrontend.npm.arguments='run test' -Dmaven.repo.local=$MAVEN_USER_HOME
+  artifacts:
+    reports:
+      junit: target/test-results/TESTS-results-jest.xml
+    paths:
+      - target/test-results
+      - target/jacoco
+    expire_in: 1 day
+
+maven-package:
+  stage: package
+  script:
+    - ./mvnw -ntp verify -Pprod -DskipTests -Dmaven.repo.local=$MAVEN_USER_HOME
+  artifacts:
+    paths:
+      - target/*.jar
+      - target/classes
+    expire_in: 1 day
+
+# Dependency scanning with Snyk
+# add Snyk API token as environment variable SNYK_TOKEN
 dependency_scanning:
   stage: release
   script:
-    # Install npm, snyk, and snyk-to-html
-    #    - npm install -g npm@latest
-    #    - npm install -g snyk
+    # Download latest CLI version
     - curl -Lo ./snyk $(curl -s https://api.github.com/repos/snyk/snyk/releases/latest | grep "browser_download_url.*snyk-linux\"" | cut -d ':' -f 2,3 | tr -d \" | tr -d ' ')
     - chmod +x snyk
-    # Run snyk help, snyk auth, snyk monitor, snyk test to break build and out report
-
+    # SNYK_TOKEN environment variable should be present and containing the api key
+    # run snyk test to break build if needed and snyk monitor to monitor this snapshot
     - ./snyk test --all-projects
     - ./snyk monitor --all-projects
 # Uncomment the following line to use gitlabs container registry. You need to adapt the REGISTRY_URL in case you are not using gitlab.com

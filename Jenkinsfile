@@ -25,25 +25,25 @@ node {
         sh "./mvnw -ntp com.github.eirslett:frontend-maven-plugin:npm"
     }
 
-//    stage('backend tests') {
-//        try {
-//            sh "./mvnw -ntp verify -P-webpack"
-//        } catch(err) {
-//            throw err
-//        } finally {
-//            junit '**/target/test-results/**/TEST-*.xml'
-//        }
-//    }
-//
-//    stage('frontend tests') {
-//        try {
-//            sh "./mvnw -ntp com.github.eirslett:frontend-maven-plugin:npm -Dfrontend.npm.arguments='run test'"
-//        } catch(err) {
-//            throw err
-//        } finally {
-//            junit '**/target/test-results/**/TEST-*.xml'
-//        }
-//    }
+    stage('backend tests') {
+        try {
+            sh "./mvnw -ntp verify -P-webpack"
+        } catch(err) {
+            throw err
+        } finally {
+            junit '**/target/test-results/**/TEST-*.xml'
+        }
+    }
+
+    stage('frontend tests') {
+        try {
+            sh "./mvnw -ntp com.github.eirslett:frontend-maven-plugin:npm -Dfrontend.npm.arguments='run test'"
+        } catch(err) {
+            throw err
+        } finally {
+            junit '**/target/test-results/**/TEST-*.xml'
+        }
+    }
 
     stage('packaging') {
         sh "./mvnw -ntp verify -P-webpack -Pprod -DskipTests"
@@ -52,19 +52,9 @@ node {
 
     // Not required if you install the Snyk CLI on your Agent
     stage('Download Latest Snyk CLI') {
-
-        latest_version = sh(script: 'curl -s https://api.github.com/repos/snyk/snyk/releases/latest | grep "tag_name"| cut -d : -f2', returnStdout: true).replaceAll('"','').replaceAll(',','')
-        latest_version = latest_version.trim()
-        echo "Latest Snyk CLI Version: ${latest_version}"
-
-        snyk_cli_dl_linux="https://github.com/snyk/snyk/releases/download/${latest_version}/snyk-linux"
-        echo "Download URL: ${snyk_cli_dl_linux}"
-
         sh """
-            curl -Lo ./snyk "${snyk_cli_dl_linux}"
+            curl -Lo ./snyk \$(curl -s https://api.github.com/repos/snyk/snyk/releases/latest | grep "browser_download_url.*snyk-linux\\"" | cut -d ':' -f 2,3 | tr -d \\" | tr -d ' ')
             chmod +x snyk
-            ls -la
-            ./snyk -v
         """
     }
 

@@ -50,27 +50,31 @@ jobs:
                     - ~/.m2
                 key: v1-dependencies-{{ checksum "pom.xml" }}-{{ checksum "package-lock.json" }}
 
-#            - run:
-#                name: Give Executable Power
-#                command: 'chmod +x mvnw'
-#            - run:
-#                name: Run Style Checks
-#                command: './mvnw -ntp checkstyle:check'
+            - run:
+                name: Give Executable Power
+                command: 'chmod +x mvnw'
+            - run:
+                name: Run Style Checks
+                command: './mvnw -ntp checkstyle:check'
             - run:
                 name: Clean and Verify
                 command: './mvnw -ntp clean verify'
-#            - run:
-#                name: Run Front End Tests
-#                command: npm run test
-#            - run:
-#                name: Verify with Prod Profile
-#                command: './mvnw -ntp verify -Pprod -DskipTests'
+            - run:
+                name: Run Front End Tests
+                command: npm run test
+            - run:
+                name: Verify with Prod Profile
+                command: './mvnw -ntp verify -Pprod -DskipTests'
+          # Dependency scanning with Snyk
+          # add Snyk API token as environment variable SNYK_TOKEN
             - run:
                 name: install-snyk
-                command: 'npm install -g snyk'
+                command: |
+                  curl -Lo ./snyk $(curl -s https://api.github.com/repos/snyk/snyk/releases/latest | grep "browser_download_url.*snyk-linux\"" | cut -d ':' -f 2,3 | tr -d \" | tr -d ' ')
+                  chmod +x snyk
             - run: # run snyk test
                 name: snyk test
-                command: 'snyk test --all-projects'
+                command: './snyk test --all-projects'
             - run: # run snyk monitor
                 name: snyk monitor
-                command: 'snyk monitor --all-projects'
+                command: './snyk monitor --all-projects'
